@@ -5,16 +5,17 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 
-// bepaal de API-base op basis van waar je app draait
+// hostname uit de browser
 const host = window.location.hostname
-const isPA = host.endsWith('.pythonanywhere.com')
-axios.defaults.baseURL = isPA
-  // op PythonAnywhere
-  ? 'https://dominicmol.pythonanywhere.com/api/v1'
-  // lokaal
-  : 'http://127.0.0.1:8000/api/v1'
 
-// App initialiseren
+// localhost of 127.0.0.1 beschouwen we als "dev", alle andere hosts als productie
+const isLocal = host === 'localhost' || host === '127.0.0.1'
+
+// baseURL instellen
+axios.defaults.baseURL = isLocal
+  ? 'http://127.0.0.1:8000/api/v1'                                // lokaal
+  : 'https://dominicmol.pythonanywhere.com/api/v1'                // productie
+
 const app = createApp(App)
 app.use(store)
 app.use(router)
