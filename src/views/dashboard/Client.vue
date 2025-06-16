@@ -66,7 +66,7 @@
         </div>
 
         <!-- Fallback als er geen notes zijn -->
-        <p v-if="notes && notes.length === 0">No notes yet for this client.</p>
+        <p v-if="!notes.length">No notes yet for this client.</p>
       </div>
     </div>
   </div>
@@ -88,18 +88,18 @@ export default {
     const clientID = this.$route.params.id
 
     try {
-      // 1) Haal client
+      // 1) Haal client op
       const { data: clientData } = await axios.get(
-        `/api/v1/clients/${clientID}/`
+        `/clients/${clientID}/`
       )
       this.client = clientData
 
-      // 2) Haal notes (let op path en query-param)
+      // 2) Haal notes op via de notes-endpoint
       const { data: notesData } = await axios.get(
-        `/api/v1/clients/notes/?client_id=${clientID}`
+        `/notes/?client_id=${clientID}`
       )
 
-      // 3) Paginatie-check: als er results is gebruik dat, anders direct array
+      // 3) Paginatie-check: gebruik notesData.results als dat bestaat
       this.notes = Array.isArray(notesData)
         ? notesData
         : Array.isArray(notesData.results)
@@ -110,7 +110,7 @@ export default {
         'Error fetching client or notes:',
         error.response?.data || error
       )
-      this.notes = []   // fallback
+      this.notes = []
     } finally {
       this.$store.commit('setIsLoading', false)
     }
@@ -121,9 +121,8 @@ export default {
       const clientID = this.$route.params.id
 
       try {
-        // DELETE via jouw custom endpoint
-        await axios.post(`/api/v1/clients/delete_client/${clientID}/`)
-        console.log('Client successfully deleted!')
+        // DELETE via je custom endpoint
+        await axios.post(`/clients/delete_client/${clientID}/`)
         this.$router.push('/dashboard/clients')
       } catch (error) {
         console.error(
@@ -151,19 +150,7 @@ export default {
   background-color: #841614;
 }
 
-.button.velos-success {
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  font-weight: bold;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
-}
-.button.velos-success:hover {
-  background-color: #27ae60;
-}
-
-/* Velos-rood voor Add note en Edit note */
+/* Velos-rood voor Add/Edit note */
 .button.velos-red {
   background-color: #a41917;
   border-color: #a41917;

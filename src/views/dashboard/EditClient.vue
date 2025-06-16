@@ -72,6 +72,14 @@ export default {
       this.client = data
     } catch (error) {
       console.error('Kon client niet ophalen:', error.response?.data || error)
+      toast({
+        message: 'Kon client niet laden',
+        type: 'is-danger',
+        dismissible: true,
+        pauseOnHover: true,
+        duration: 2000,
+        position: 'bottom-right',
+      })
     } finally {
       this.$store.commit('setIsLoading', false)
     }
@@ -81,7 +89,7 @@ export default {
       this.$store.commit('setIsLoading', true)
       const clientID = this.$route.params.id
 
-      // Alleen de wél bewerkbare velden
+      // Alleen de bewerkbare velden meegeven
       const payload = {
         name:           this.client.name,
         contact_person: this.client.contact_person,
@@ -94,7 +102,7 @@ export default {
         await axios.patch(`/api/v1/clients/${clientID}/`, payload)
 
         toast({
-          message: 'The client was updated',
+          message: 'De client is geüpdatet',
           type: 'is-success',
           dismissible: true,
           pauseOnHover: true,
@@ -102,10 +110,17 @@ export default {
           position: 'bottom-right',
         })
 
-        this.$router.push(`/dashboard/clients/${clientID}`)
+        this.$router.push({ name: 'Client', params: { id: clientID } })
       } catch (error) {
         console.error('Update failed:', error.response?.data || error)
-        // Optioneel: toon de foutmelding in een toast of onder het formulier
+        toast({
+          message: 'Update mislukt',
+          type: 'is-danger',
+          dismissible: true,
+          pauseOnHover: true,
+          duration: 2000,
+          position: 'bottom-right',
+        })
       } finally {
         this.$store.commit('setIsLoading', false)
       }
@@ -116,7 +131,7 @@ export default {
 
 <style scoped>
 .field {
-  margin-bottom: 1.25rem; 
+  margin-bottom: 1.25rem;
 }
 
 .velos-button {

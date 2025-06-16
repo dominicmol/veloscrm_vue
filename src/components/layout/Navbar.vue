@@ -19,7 +19,7 @@
           <div class="buttons">
             <template v-if="!$store.state.isAuthenticated">
               <router-link to="/sign-up" class="button velos-button"><strong>Sign up</strong></router-link>
-              <router-link to="/log-in" class="button velos-button-outlined">Log in</router-link>
+              <router-link to="/log-in" class="button is-light">Log in</router-link>
             </template>
 
             <template v-else>
@@ -45,60 +45,42 @@ export default {
   margin-right: 10px;
 }
 
-/* De titel "Velos CRM" naast het logo */
 .navbar-title {
-  color: #222222; /* Blijft zwart voor goed contrast op de crèmekleur */
+  color: white;
   font-weight: bold;
   font-size: 1.2rem;
   display: flex;
   align-items: center;
 }
 
-/* De navbar zelf, nu crèmekleurig */
+/* 🌑 Velos kleuren */
 .velos-navbar {
-  background-color: #ffffff !important; /* De nieuwe crèmekleur */
-  border-bottom: 1px solid #d9bf9c; /* Een subtiele donkerdere rand voor diepte */
+  background-color: #a41917 !important;
 }
 
-/* Link van het logo/titel (container voor logo en titel) */
-.brand-link {
-  color: #a41917 !important; /* Rode tekst voor de link zelf */
-}
-
-/* Navigatie links (Leads, Clients, Team) */
+/* Nav links wit maken */
 .nav-link {
-  color: #a41917 !important; /* Rode tekst */
+  color: white !important;
 }
 
 .nav-link:hover {
   background-color: transparent;
-  color: #821414 !important; /* Donkerder rood bij hover */
+  color: #e8ceb0 !important; /* optioneel: zachte hoverkleur */
 }
 
-/* De okergele primaire knop (Sign up / My account) */
+/* Zorg ook dat de merk-link wit is */
+.brand-link {
+  color: white !important;
+}
+
 .velos-button {
-  background-color: #ee8b1a !important; /* Okergeel, blijft hetzelfde */
+  background-color: #ee8b1a !important;
   border-color: transparent;
   color: white !important;
 }
 
 .velos-button:hover {
-  background-color: #d97706 !important; /* Donkerder okergeel bij hover, blijft hetzelfde */
+  background-color: #d97706 !important;
   color: white !important;
-}
-
-/* De 'Log in' knop (rood omrand, crèmekleurige achtergrond, rode tekst) */
-.button.velos-button-outlined {
-    background-color: #ffffff !important; /* Crèmekleurige achtergrond */
-    color: #a41917 !important; /* Rode tekst */
-    border-color: #a41917 !important; /* Rode rand */
-    font-weight: 600;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-.button.velos-button-outlined:hover {
-    background-color: #ffffff !important; /* Iets donkerder crèmekleur bij hover */
-    color: #821414 !important; /* Donkerder rood bij hover */
-    border-color: #821414 !important; /* Donkerder rode rand bij hover */
 }
 </style>

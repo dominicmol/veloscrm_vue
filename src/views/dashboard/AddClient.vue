@@ -10,41 +10,70 @@
                     <div class="field">
                         <label>Name</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="name" placeholder="Enter client name">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="name"
+                                placeholder="Enter client name"
+                                required
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Contact person</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="contact_person" placeholder="Enter contact person">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="contact_person"
+                                placeholder="Enter contact person"
+                                required
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Email</label>
                         <div class="control">
-                            <input type="email" class="input" v-model="email" placeholder="example@client.com">
+                            <input
+                                type="email"
+                                class="input"
+                                v-model="email"
+                                placeholder="example@client.com"
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Phone</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="phone" placeholder="Enter phone number">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="phone"
+                                placeholder="Enter phone number"
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Website</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="website" placeholder="https://">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="website"
+                                placeholder="https://"
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="control">
-                            <button type="submit" class="button velos-button">Submit</button>
+                            <button type="submit" class="button velos-button">
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -65,7 +94,6 @@ export default {
             contact_person: '',
             email: '',
             phone: '',
-            estimated_value: 0,
             website: ''
         }
     },
@@ -81,25 +109,30 @@ export default {
                 website: this.website
             }
 
-            await axios
-                .post('/api/v1/clients/', client)
-                .then(response => {
-                    toast({
-                        message: 'The client was added',
-                        type: 'is-success',
-                        dismissible: true,
-                        pauseOnHover: true,
-                        duration: 2000,
-                        position: 'bottom-right',
-                    })
-
-                    this.$router.push('/dashboard/clients')
+            try {
+                await axios.post('/clients/', client)
+                toast({
+                    message: 'The client was added',
+                    type: 'is-success',
+                    dismissible: true,
+                    pauseOnHover: true,
+                    duration: 2000,
+                    position: 'bottom-right',
                 })
-                .catch(error => {
-                    console.log(error)
+                this.$router.push('/dashboard/clients')
+            } catch (error) {
+                console.error('Error adding client:', error)
+                toast({
+                    message: 'Failed to add client',
+                    type: 'is-danger',
+                    dismissible: true,
+                    pauseOnHover: true,
+                    duration: 3000,
+                    position: 'bottom-right',
                 })
-
-            this.$store.commit('setIsLoading', false)
+            } finally {
+                this.$store.commit('setIsLoading', false)
+            }
         }
     }
 }

@@ -68,7 +68,8 @@ export default {
       this.$store.commit('setIsLoading', true)
 
       try {
-        await axios.post('/api/v1/users/', {
+        // Let op: hier enkel '/users/' omdat baseURL al '/api/v1' is
+        await axios.post('/users/', {
           username: this.email,
           password: this.password
         })
@@ -84,7 +85,7 @@ export default {
 
         this.$router.push('/log-in')
       } catch (error) {
-        if (error.response) {
+        if (error.response?.data) {
           for (const field in error.response.data) {
             this.errors.push(`${field}: ${error.response.data[field]}`)
           }

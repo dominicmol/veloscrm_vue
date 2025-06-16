@@ -10,49 +10,89 @@
                     <div class="field">
                         <label>Company</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="company" placeholder="Enter company name">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="company"
+                                placeholder="Enter company name"
+                                required
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Contact person</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="contact_person" placeholder="Enter contact person">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="contact_person"
+                                placeholder="Enter contact person"
+                                required
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Email</label>
                         <div class="control">
-                            <input type="email" class="input" v-model="email" placeholder="example@company.com">
+                            <input
+                                type="email"
+                                class="input"
+                                v-model="email"
+                                placeholder="example@company.com"
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Phone</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="phone" placeholder="Enter phone number">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="phone"
+                                placeholder="Enter phone number"
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Website</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="website" placeholder="https://">
+                            <input
+                                type="text"
+                                class="input"
+                                v-model="website"
+                                placeholder="https://"
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Confidence</label>
                         <div class="control">
-                            <input type="number" class="input" v-model="confidence" placeholder="Enter confidence">
+                            <input
+                                type="number"
+                                class="input"
+                                v-model="confidence"
+                                placeholder="Enter confidence"
+                                min="0"
+                                max="100"
+                            />
                         </div>
                     </div>
 
                     <div class="field">
                         <label>Estimated value</label>
                         <div class="control">
-                            <input type="number" class="input" v-model="estimated_value" placeholder="Enter estimated value">
+                            <input
+                                type="number"
+                                class="input"
+                                v-model="estimated_value"
+                                placeholder="Enter estimated value"
+                                min="0"
+                            />
                         </div>
                     </div>
 
@@ -86,7 +126,9 @@
 
                     <div class="field">
                         <div class="control">
-                            <button type="submit" class="button velos-button">Submit</button>
+                            <button type="submit" class="button velos-button">
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -107,9 +149,9 @@ export default {
             contact_person: '',
             email: '',
             phone: '',
-            estimated_value: 0,
-            confidence: 0,
             website: '',
+            confidence: 0,
+            estimated_value: 0,
             status: 'new',
             priority: 'medium'
         }
@@ -118,37 +160,42 @@ export default {
         async submitForm() {
             this.$store.commit('setIsLoading', true)
 
-            const lead = {
+            const payload = {
                 company: this.company,
                 contact_person: this.contact_person,
                 email: this.email,
                 phone: this.phone,
                 website: this.website,
-                estimated_value: this.estimated_value,
                 confidence: this.confidence,
+                estimated_value: this.estimated_value,
                 status: this.status,
                 priority: this.priority
             }
 
-            await axios
-                .post('/api/v1/leads/', lead)
-                .then(response => {
-                    toast({
-                        message: 'The lead was added',
-                        type: 'is-success',
-                        dismissible: true,
-                        pauseOnHover: true,
-                        duration: 2000,
-                        position: 'bottom-right',
-                    })
-
-                    this.$router.push('/dashboard/leads')
+            try {
+                await axios.post('/leads/', payload)
+                toast({
+                    message: 'The lead was added',
+                    type: 'is-success',
+                    dismissible: true,
+                    pauseOnHover: true,
+                    duration: 2000,
+                    position: 'bottom-right',
                 })
-                .catch(error => {
-                    console.log(error)
+                this.$router.push('/dashboard/leads')
+            } catch (error) {
+                console.error('Error adding lead:', error)
+                toast({
+                    message: 'Failed to add lead',
+                    type: 'is-danger',
+                    dismissible: true,
+                    pauseOnHover: true,
+                    duration: 3000,
+                    position: 'bottom-right',
                 })
-
-            this.$store.commit('setIsLoading', false)
+            } finally {
+                this.$store.commit('setIsLoading', false)
+            }
         }
     }
 }

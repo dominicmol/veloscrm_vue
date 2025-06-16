@@ -26,8 +26,7 @@
       </div>
 
       <div class="column is-12">
-        <!-- Guard: clients moet bestaan én een lengte hebben -->
-        <template v-if="clients && clients.length">
+        <template v-if="clients.length">
           <table class="table is-fullwidth">
             <thead>
               <tr>
@@ -82,7 +81,7 @@ export default {
   name: 'Clients',
   data() {
     return {
-      clients: [],            // altijd een array als startpunt
+      clients: [],            
       showNextButton: false,
       showPreviousButton: false,
       currentPage: 1,
@@ -107,17 +106,17 @@ export default {
       this.showPreviousButton = false
 
       try {
+        // Let op: we gebruiken nu alleen '/clients/' omdat baseURL al '/api/v1' bevat
         const response = await axios.get(
-          `/api/v1/clients/?page=${this.currentPage}&search=${this.query}`
+          `/clients/?page=${this.currentPage}&search=${this.query}`
         )
-        // Haal results uit de paginated respons, maar val terug op lege array
         const { results, next, previous } = response.data
         this.clients = Array.isArray(results) ? results : []
         this.showNextButton = !!next
         this.showPreviousButton = !!previous
       } catch (error) {
         console.error('Fout bij ophalen clients:', error.response?.data || error)
-        this.clients = []  // voorkom undefined
+        this.clients = []
       } finally {
         this.$store.commit('setIsLoading', false)
       }

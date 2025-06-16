@@ -59,29 +59,30 @@ export default {
       }
 
       try {
-        const loginRes = await axios.post('/api/v1/auth/token/login/', formData)
-        const token = loginRes.data.auth_token
+        // let op: hier enkel /auth/... because baseURL al /api/v1 bevat
+        const loginRes = await axios.post('/auth/token/login/', formData)
+        const token    = loginRes.data.auth_token
 
         this.$store.commit('setToken', token)
         axios.defaults.headers.common['Authorization'] = `Token ${token}`
         localStorage.setItem('token', token)
 
-        const userRes = await axios.get('/api/v1/auth/users/me/')
-        const user = {
-          id: userRes.data.id,
+        const userRes = await axios.get('/auth/users/me/')
+        const user    = {
+          id:       userRes.data.id,
           username: userRes.data.username
         }
         this.$store.commit('setUser', user)
         localStorage.setItem('username', user.username)
-        localStorage.setItem('userid', user.id)
+        localStorage.setItem('userid',   user.id)
 
-        // *** THIS IS THE CRUCIAL CHANGE ***
-        const teamRes = await axios.get('/api/v1/teams/get_my_team/') 
+        // teams endpoint ook zonder prefix
+        const teamRes = await axios.get('/teams/get_my_team/')
         this.$store.commit('setTeam', {
-          id: teamRes.data.id,
+          id:   teamRes.data.id,
           name: teamRes.data.name
         })
-        localStorage.setItem('team_id', teamRes.data.id)
+        localStorage.setItem('team_id',   teamRes.data.id)
         localStorage.setItem('team_name', teamRes.data.name)
 
         this.$router.push('/dashboard/my-account')
